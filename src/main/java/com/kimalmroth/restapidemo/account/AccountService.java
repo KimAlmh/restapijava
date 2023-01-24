@@ -1,5 +1,8 @@
 package com.kimalmroth.restapidemo.account;
 
+import com.kimalmroth.restapidemo.account.Model.Account;
+import com.kimalmroth.restapidemo.account.Model.AccountLogin;
+import com.kimalmroth.restapidemo.account.Model.AccountSimple;
 import com.password4j.BcryptFunction;
 import com.password4j.Password;
 import com.password4j.types.Bcrypt;
@@ -14,24 +17,21 @@ import java.util.UUID;
 @Service
 public class AccountService {
 
-
-
     private final AccountRepository accountRepository;
     BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.Y, 11);
-
 
     @Autowired
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
-    public List<AccountSimpleData> getAccounts() {
+    public List<AccountSimple> getAccounts() {
         var accounts = accountRepository.findAll();
-        ArrayList<AccountSimpleData> simpleData = new ArrayList<>();
+        ArrayList<AccountSimple> simpleData = new ArrayList<>();
         for (Account acc :
                 accounts) {
             simpleData.add(
-                    AccountSimpleData
+                    AccountSimple
                             .builder()
                             .firstname(acc.getFirstName())
                             .lastName(acc.getLastName())
@@ -89,7 +89,7 @@ public class AccountService {
         accountRepository.save(accountFromDb);
     }
 
-    public Account login(AccountLoginData accountIn) {
+    public Account login(AccountLogin accountIn) {
         Optional<Account> accountFromDb = accountRepository.findByEmail(accountIn.getEmail());
         if (accountFromDb.isEmpty()){
             throw new IllegalStateException("No user with email: " + accountIn.getEmail());

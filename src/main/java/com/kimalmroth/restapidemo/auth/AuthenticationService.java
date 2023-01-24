@@ -1,15 +1,16 @@
 package com.kimalmroth.restapidemo.auth;
 
 import com.kimalmroth.restapidemo.account.AccountRepository;
+import com.kimalmroth.restapidemo.account.Model.Account;
 import com.kimalmroth.restapidemo.account.Role;
 import com.kimalmroth.restapidemo.config.JwtService;
+import com.kimalmroth.restapidemo.error.EmailAlreadyTakenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.kimalmroth.restapidemo.account.Account;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,8 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         if (repository.findByEmail(request.getEmail()).isPresent()){
-            throw new IllegalStateException("Email already taken");
+            System.out.println("Email already taken");
+            throw new EmailAlreadyTakenException("Email already taken");
         }
         var account = Account
                 .builder()
@@ -29,7 +31,7 @@ public class AuthenticationService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode((request.getPassword())))
-                .role(Role.User)
+                .role(Role.ROLE_USER)
                 .build();
         repository.save(account);
         var jwt = jwtService.generateToken(account);
@@ -39,6 +41,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        System.out.println("In Authenticate");
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

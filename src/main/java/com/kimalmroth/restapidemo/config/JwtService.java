@@ -1,5 +1,6 @@
 package com.kimalmroth.restapidemo.config;
 
+import com.kimalmroth.restapidemo.account.Model.Account;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,7 +25,7 @@ public class JwtService {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(Account userDetails){
         return generateToken(new HashMap<>(), userDetails);
     }
     public boolean isValidToken(String token, UserDetails userDetails){
@@ -33,6 +34,7 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
+
         return extractExpiration(token).before(new Date());
     }
 
@@ -40,9 +42,10 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
+    public String generateToken(Map<String, Object> extraClaims, Account userDetails){
         return  Jwts.builder()
                 .setClaims(extraClaims)
+                .claim("role",userDetails.getRole())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60)))

@@ -1,5 +1,6 @@
-package com.kimalmroth.restapidemo.account;
+package com.kimalmroth.restapidemo.account.Model;
 
+import com.kimalmroth.restapidemo.account.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AccountSimpleData {
+public class AccountSimple {
 
     private String email;
     private String firstname;

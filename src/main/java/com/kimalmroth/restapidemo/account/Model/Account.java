@@ -1,5 +1,6 @@
-package com.kimalmroth.restapidemo.account;
+package com.kimalmroth.restapidemo.account.Model;
 
+import com.kimalmroth.restapidemo.account.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,8 @@ public class Account implements UserDetails {
     private String lastName;
     @Enumerated(EnumType.STRING)
     private Role role;
+//    private List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+//    GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(getRole().toString());
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

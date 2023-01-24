@@ -4,6 +4,7 @@ spring:
     username: postgres
     password: katt
     driver-class-name: org.postgresql.Driver
+    name: account
   jpa:
     hibernate:
       ddl-auto: update
