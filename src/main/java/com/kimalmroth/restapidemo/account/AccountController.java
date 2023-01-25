@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/admin/user")
 //@EnableMethodSecurity
 //@PreAuthorize("hasRole('USER')")
 public class AccountController {
