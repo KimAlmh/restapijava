@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BadCredentialsResponse extends ErrorResponse{
+public class BadCredentialsResponse extends ErrorResponse {
     private String username;
     private String password;
 }

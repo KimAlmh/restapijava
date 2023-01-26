@@ -1,6 +1,6 @@
 package com.kimalmroth.restapidemo.account.Model;
 
-import com.kimalmroth.restapidemo.account.Role;
+import com.kimalmroth.restapidemo.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,9 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Builder
@@ -30,14 +28,21 @@ public class Account implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
-    @Enumerated(EnumType.STRING)
-    private Role role;
-//    private List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-//    GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(getRole().toString());
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_ROLES",
+            joinColumns = {
+                    @JoinColumn(name = "USER_ID")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "ROLE_ID")})
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+        return authorities;
     }
 
     @Override

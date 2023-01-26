@@ -1,7 +1,7 @@
 package com.kimalmroth.restapidemo.error;
 
+import com.kimalmroth.restapidemo.error.exception.DataBadCredentialsException;
 import com.kimalmroth.restapidemo.error.exception.EmailAlreadyTakenException;
-import com.kimalmroth.restapidemo.error.exception.MyBadCredentialsException;
 import com.kimalmroth.restapidemo.error.model.BadCredentialsResponse;
 import com.kimalmroth.restapidemo.error.model.ErrorResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,8 +27,8 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(error.getStatus()).body(error);
     }
 
-    @ExceptionHandler(MyBadCredentialsException.class)
-    public ResponseEntity<ErrorResponse> badCredentials(MyBadCredentialsException ex, WebRequest req) {
+    @ExceptionHandler(DataBadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> badCredentials(DataBadCredentialsException ex, WebRequest req) {
         BadCredentialsResponse error = new BadCredentialsResponse();
         error.setDate(LocalDateTime.now());
         error.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -38,6 +38,7 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(error.getStatus()).body(error);
     }
+
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> userNotFound(Exception ex, WebRequest req) {
         ErrorResponse error = new ErrorResponse();

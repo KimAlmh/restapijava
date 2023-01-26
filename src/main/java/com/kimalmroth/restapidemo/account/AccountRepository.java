@@ -6,9 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
-@Repository
-public interface AccountRepository extends JpaRepository<Account, UUID>{
 
-//    @Query("SELECT a FROM Account a WHERE a.email = ?1")
+@Repository
+public interface AccountRepository extends JpaRepository<Account, UUID> {
+
+    //    @Query("SELECT a FROM Account a WHERE a.email = ?1")
     Optional<Account> findByEmail(String email);
 }

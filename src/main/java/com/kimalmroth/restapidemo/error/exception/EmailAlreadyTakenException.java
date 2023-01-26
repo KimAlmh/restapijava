@@ -1,7 +1,7 @@
 package com.kimalmroth.restapidemo.error.exception;
 
-public class EmailAlreadyTakenException extends  RuntimeException {
-    public EmailAlreadyTakenException(String errorMessage){
+public class EmailAlreadyTakenException extends RuntimeException {
+    public EmailAlreadyTakenException(String errorMessage) {
         super(errorMessage);
     }
 }

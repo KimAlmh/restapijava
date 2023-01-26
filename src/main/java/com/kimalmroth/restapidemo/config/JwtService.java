@@ -17,18 +17,31 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "423F4528482B4D6251655468566D597133743677397A24432646294A404E635266556A586E5A7234753778214125442A472D4B6150645367566B597033733576";
-    public String extractUsername(String jwt) {
-        return extractClaim(jwt, Claims::getSubject);
+    private final NotionConfigProperties env;
+
+    public JwtService(NotionConfigProperties env) {
+        this.env = env;
     }
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
+
+
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public String extractRoles(String token) {
+        return extractClaim(token, (Claims c) -> c.get("role").toString());
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    public String generateToken(Account userDetails){
+
+    public String generateToken(Account userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
-    public boolean isValidToken(String token, UserDetails userDetails){
+
+    public boolean isValidToken(String token, UserDetails userDetails) {
         final String userEmail = extractUsername(token);
         return (userEmail.equals((userDetails.getUsername()))) && !isTokenExpired(token);
     }
@@ -42,17 +55,18 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String generateToken(Map<String, Object> extraClaims, Account userDetails){
-        return  Jwts.builder()
+    public String generateToken(Map<String, Object> extraClaims, Account userDetails) {
+        return Jwts.builder()
                 .setClaims(extraClaims)
-                .claim("role",userDetails.getRole())
+                .claim("role", userDetails.getRoles())
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
-    private Claims extractAllClaims(String token){
+
+    private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -62,7 +76,8 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        var secretKey = env.secret();
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

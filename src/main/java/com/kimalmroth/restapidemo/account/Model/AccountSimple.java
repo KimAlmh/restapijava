@@ -1,10 +1,12 @@
 package com.kimalmroth.restapidemo.account.Model;
 
-import com.kimalmroth.restapidemo.account.Role;
+import com.kimalmroth.restapidemo.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor
@@ -15,5 +17,5 @@ public class AccountSimple {
     private String email;
     private String firstname;
     private String lastName;
-    private Role role;
+    private Set<Role> role;
 }

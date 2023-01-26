@@ -25,8 +25,9 @@ public class AccountController {
     public List<AccountSimple> getAccounts() {
         return accountService.getAccounts();
     }
+
     @GetMapping(path = {"{accountId}"})
-    public Account getAccountById(@PathVariable("accountId") String uuid){
+    public Account getAccountById(@PathVariable("accountId") String uuid) {
         try {
             return accountService.getAccountByUuid(uuid);
         } catch (Exception e) {
@@ -34,21 +35,24 @@ public class AccountController {
             return new Account();
         }
     }
+
     @PostMapping
-    public void postAccount(@RequestBody Account account){
+    public void postAccount(@RequestBody Account account) {
         accountService.addAccount(account);
     }
 
     @DeleteMapping(path = {"{accountId}"})
-    public void deleteAccount(@PathVariable("accountId") String uuid){
+    public void deleteAccount(@PathVariable("accountId") String uuid) {
         accountService.removeAccountByUUID(UUID.fromString(uuid));
     }
+
     @PutMapping(path = "{accountId}")
-    public void putAccount(@PathVariable String accountId, @RequestBody Account values){
+    public void putAccount(@PathVariable String accountId, @RequestBody Account values) {
         accountService.updateAccount(accountId, values);
     }
+
     @PostMapping("/login")
-    public Account login(@RequestBody AccountLogin account){
+    public Account login(@RequestBody AccountLogin account) {
         return accountService.login(account);
     }
 }

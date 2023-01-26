@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        if (Objects.equals(request.getRequestURI(), "/api/auth/register")) {
+
+        }
         try {
             jwt = authHeader.substring(7);
             userEmail = jwtService.extractUsername(jwt);
@@ -42,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: JWT expired");
         }

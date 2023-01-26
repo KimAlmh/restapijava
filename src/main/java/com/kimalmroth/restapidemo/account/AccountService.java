@@ -7,12 +7,10 @@ import com.password4j.BcryptFunction;
 import com.password4j.Password;
 import com.password4j.types.Bcrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AccountService {
@@ -28,15 +26,14 @@ public class AccountService {
     public List<AccountSimple> getAccounts() {
         var accounts = accountRepository.findAll();
         ArrayList<AccountSimple> simpleData = new ArrayList<>();
-        for (Account acc :
-                accounts) {
+        for (Account acc : accounts) {
             simpleData.add(
                     AccountSimple
                             .builder()
                             .firstname(acc.getFirstName())
                             .lastName(acc.getLastName())
                             .email(acc.getEmail())
-                            .role(acc.getRole())
+                            .role(acc.getRoles())
                             .build()
             );
         }
@@ -54,15 +51,23 @@ public class AccountService {
     }
 
     public void removeAccountByUUID(UUID uuid) {
-        if (!accountRepository.existsById(uuid)){
+        if (!accountRepository.existsById(uuid)) {
             throw new IllegalStateException("No account with uuid: " + uuid);
         }
         accountRepository.deleteById(uuid);
     }
 
+    private Set<SimpleGrantedAuthority> getAuthority(Account user) {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
+        });
+        return authorities;
+    }
+
     public Account getAccountByUuid(String uuid) {
         var account = accountRepository.findById(UUID.fromString(uuid));
-        if (account.isEmpty()){
+        if (account.isEmpty()) {
             throw new IllegalStateException("No account with id: " + uuid);
         }
         return account.get();
@@ -74,7 +79,7 @@ public class AccountService {
                 .orElseThrow(() -> new IllegalStateException("No account with id: " + accountId));
 
         if (isNotNullOrEmptyOrEqual(accountIn.getEmail(), accountFromDb.getEmail())
-            && accountRepository.findByEmail(accountIn.getEmail()).isEmpty())
+                && accountRepository.findByEmail(accountIn.getEmail()).isEmpty())
             accountFromDb.setEmail(accountIn.getEmail());
 
         if (isNotNullOrEmptyOrEqual(accountIn.getPassword(), accountFromDb.getPassword()))
@@ -91,23 +96,26 @@ public class AccountService {
 
     public Account login(AccountLogin accountIn) {
         Optional<Account> accountFromDb = accountRepository.findByEmail(accountIn.getEmail());
-        if (accountFromDb.isEmpty()){
+        if (accountFromDb.isEmpty()) {
             throw new IllegalStateException("No user with email: " + accountIn.getEmail());
         }
         var hashedPassword = accountFromDb.get().getPassword();
-        if (!checkPassword(accountIn.getPassword(), hashedPassword)){
+        if (!checkPassword(accountIn.getPassword(), hashedPassword)) {
             throw new IllegalStateException("Password does not match");
         }
         return accountFromDb.get();
 
     }
-    private boolean isNotNullOrEmptyOrEqual(String newValue, String currentValue){
+
+    private boolean isNotNullOrEmptyOrEqual(String newValue, String currentValue) {
         return newValue != null && newValue.length() != 0 && !newValue.equals(currentValue);
     }
-    private String generateHashedPassword(String password){
+
+    private String generateHashedPassword(String password) {
         return Password.hash(password).with(bcrypt).getResult();
     }
-    private boolean checkPassword(String password, String hashedPassword){
+
+    private boolean checkPassword(String password, String hashedPassword) {
         return Password.check(password, hashedPassword).with(bcrypt);
     }
 }

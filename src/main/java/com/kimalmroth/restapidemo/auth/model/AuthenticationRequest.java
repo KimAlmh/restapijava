@@ -1,4 +1,4 @@
-package com.kimalmroth.restapidemo.auth;
+package com.kimalmroth.restapidemo.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
