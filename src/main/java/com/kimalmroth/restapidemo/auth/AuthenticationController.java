@@ -1,7 +1,7 @@
 package com.kimalmroth.restapidemo.auth;
 
-import com.kimalmroth.restapidemo.auth.model.AuthenticationRequest;
-import com.kimalmroth.restapidemo.auth.model.RegisterRequest;
+import com.kimalmroth.restapidemo.auth.data.AuthenticationRequest;
+import com.kimalmroth.restapidemo.auth.data.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

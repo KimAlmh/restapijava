@@ -22,4 +22,5 @@ public class Role {
 
     @Column
     private String description;
+
 }

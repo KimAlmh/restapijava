@@ -1,4 +1,4 @@
-package com.kimalmroth.restapidemo.error.model;
+package com.kimalmroth.restapidemo.error.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,8 +2,8 @@ package com.kimalmroth.restapidemo.error;
 
 import com.kimalmroth.restapidemo.error.exception.DataBadCredentialsException;
 import com.kimalmroth.restapidemo.error.exception.EmailAlreadyTakenException;
-import com.kimalmroth.restapidemo.error.model.BadCredentialsResponse;
-import com.kimalmroth.restapidemo.error.model.ErrorResponse;
+import com.kimalmroth.restapidemo.error.data.BadCredentialsResponse;
+import com.kimalmroth.restapidemo.error.data.ErrorResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

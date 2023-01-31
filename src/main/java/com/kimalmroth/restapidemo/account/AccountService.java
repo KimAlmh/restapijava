@@ -1,11 +1,13 @@
 package com.kimalmroth.restapidemo.account;
 
 import com.kimalmroth.restapidemo.account.Model.Account;
-import com.kimalmroth.restapidemo.account.Model.AccountLogin;
-import com.kimalmroth.restapidemo.account.Model.AccountSimple;
+import com.kimalmroth.restapidemo.account.data.AccountLoginRequest;
+import com.kimalmroth.restapidemo.account.data.AccountSimpleResponse;
+import com.kimalmroth.restapidemo.mapper.UserMapper;
 import com.password4j.BcryptFunction;
 import com.password4j.Password;
 import com.password4j.types.Bcrypt;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,8 @@ import java.util.*;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+
+    private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
     BcryptFunction bcrypt = BcryptFunction.getInstance(Bcrypt.Y, 11);
 
     @Autowired
@@ -23,19 +27,12 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public List<AccountSimple> getAccounts() {
+    public List<AccountSimpleResponse> getAccounts() {
         var accounts = accountRepository.findAll();
-        ArrayList<AccountSimple> simpleData = new ArrayList<>();
+        System.out.println(accounts.get(0).getRoles());
+        ArrayList<AccountSimpleResponse> simpleData = new ArrayList<>();
         for (Account acc : accounts) {
-            simpleData.add(
-                    AccountSimple
-                            .builder()
-                            .firstname(acc.getFirstName())
-                            .lastName(acc.getLastName())
-                            .email(acc.getEmail())
-                            .role(acc.getRoles())
-                            .build()
-            );
+            simpleData.add(mapper.ACCOUNT_SIMPLE_RESPONSE(acc));
         }
         return simpleData;
     }
@@ -55,14 +52,6 @@ public class AccountService {
             throw new IllegalStateException("No account with uuid: " + uuid);
         }
         accountRepository.deleteById(uuid);
-    }
-
-    private Set<SimpleGrantedAuthority> getAuthority(Account user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName().toString()));
-        });
-        return authorities;
     }
 
     public Account getAccountByUuid(String uuid) {
@@ -94,7 +83,7 @@ public class AccountService {
         accountRepository.save(accountFromDb);
     }
 
-    public Account login(AccountLogin accountIn) {
+    public Account login(AccountLoginRequest accountIn) {
         Optional<Account> accountFromDb = accountRepository.findByEmail(accountIn.getEmail());
         if (accountFromDb.isEmpty()) {
             throw new IllegalStateException("No user with email: " + accountIn.getEmail());

@@ -1,4 +1,4 @@
-package com.kimalmroth.restapidemo.error.model;
+package com.kimalmroth.restapidemo.error.data;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

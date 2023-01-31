@@ -13,12 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table
+@Data
 public class Account implements UserDetails {
     @Id
     @GeneratedValue
@@ -37,6 +37,11 @@ public class Account implements UserDetails {
             inverseJoinColumns = {
                     @JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles;
+
+//    @Override
+//    public String getPassword(){
+//        return this.password;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

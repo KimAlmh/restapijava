@@ -2,10 +2,10 @@ package com.kimalmroth.restapidemo.auth;
 
 import com.kimalmroth.restapidemo.account.AccountRepository;
 import com.kimalmroth.restapidemo.account.Model.Account;
-import com.kimalmroth.restapidemo.auth.model.AuthenticationRequest;
-import com.kimalmroth.restapidemo.auth.model.AuthenticationResponse;
-import com.kimalmroth.restapidemo.auth.model.RegisterRequest;
-import com.kimalmroth.restapidemo.auth.model.RegisterResponse;
+import com.kimalmroth.restapidemo.auth.data.AuthenticationRequest;
+import com.kimalmroth.restapidemo.auth.data.AuthenticationResponse;
+import com.kimalmroth.restapidemo.auth.data.RegisterRequest;
+import com.kimalmroth.restapidemo.auth.data.RegisterResponse;
 import com.kimalmroth.restapidemo.config.JwtService;
 import com.kimalmroth.restapidemo.error.exception.DataBadCredentialsException;
 import com.kimalmroth.restapidemo.error.exception.EmailAlreadyTakenException;

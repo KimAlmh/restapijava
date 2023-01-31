@@ -1,4 +1,4 @@
-package com.kimalmroth.restapidemo.auth.model;
+package com.kimalmroth.restapidemo.auth.data;
 
 import lombok.Builder;
 import lombok.Data;

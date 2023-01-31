@@ -1,8 +1,8 @@
 package com.kimalmroth.restapidemo.account;
 
 import com.kimalmroth.restapidemo.account.Model.Account;
-import com.kimalmroth.restapidemo.account.Model.AccountLogin;
-import com.kimalmroth.restapidemo.account.Model.AccountSimple;
+import com.kimalmroth.restapidemo.account.data.AccountLoginRequest;
+import com.kimalmroth.restapidemo.account.data.AccountSimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public List<AccountSimple> getAccounts() {
+    public List<AccountSimpleResponse> getAccounts() {
         return accountService.getAccounts();
     }
 
@@ -52,7 +52,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public Account login(@RequestBody AccountLogin account) {
+    public Account login(@RequestBody AccountLoginRequest account) {
         return accountService.login(account);
     }
 }

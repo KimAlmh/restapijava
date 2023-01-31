@@ -1,8 +1,8 @@
-package com.kimalmroth.restapidemo.account.Model;
+package com.kimalmroth.restapidemo.account.data;
 
 import lombok.Getter;
 
-public class AccountLogin {
+public class AccountLoginRequest {
 
     @Getter
     private String email;
